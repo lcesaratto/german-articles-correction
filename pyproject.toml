@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "german-grammar-checker"
+version = "0.1.0"
+description = ""
+authors = ["Lisandro Cesaratto <lisandrocesaratto95@gmail.com>"]
+readme = "README.md"
+packages = [{include = "german_grammar_checker", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+wiki-dump-parser = "^2.0.2"
+pandas = "^1.4.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
