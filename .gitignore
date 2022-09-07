@@ -1,8 +1,7 @@
 # User defaults
-data/*.bz2
-data/*.xml
-data/*.txt
-data/*.csv
+!data/
+data/*
+!data/*.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

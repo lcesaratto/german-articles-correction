@@ -10,7 +10,12 @@ packages = [{include = "german_grammar_checker", from = "src"}]
 python = "^3.9"
 wiki-dump-parser = "^2.0.2"
 pandas = "^1.4.4"
+poethepoet = "^0.16.2"
+transformers = "^4.21.3"
+datasets = "^2.4.0"
 
+[tool.poe.tasks]
+force-cuda11 = "python -m pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116"
 
 [build-system]
 requires = ["poetry-core"]
