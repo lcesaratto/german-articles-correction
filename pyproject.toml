@@ -10,12 +10,10 @@ packages = [{include = "german_grammar_checker", from = "src"}]
 python = "^3.9"
 wiki-dump-parser = "^2.0.2"
 pandas = "^1.4.4"
-poethepoet = "^0.16.2"
 transformers = "^4.21.3"
 datasets = "^2.4.0"
-
-[tool.poe.tasks]
-force-cuda11 = "python -m pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116"
+spacy = {extras = ["cuda112"], version = "^3.4.1"}
+de_core_news_lg = {url = "https://github.com/explosion/spacy-models/releases/download/de_core_news_lg-3.4.0/de_core_news_lg-3.4.0-py3-none-any.whl"}
 
 [build-system]
 requires = ["poetry-core"]

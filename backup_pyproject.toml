@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "german-grammar-checker"
+version = "0.1.0"
+description = ""
+authors = ["Lisandro Cesaratto <lisandrocesaratto95@gmail.com>"]
+readme = "README.md"
+packages = [{include = "german_grammar_checker", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+wiki-dump-parser = { version = "^2.0.2", source="pypidef"}
+pandas = { version = "^1.4.4", source="pypidef"}
+transformers = { version = "^4.21.3", source="pypidef"}
+datasets = { version = "^2.4.0", source="pypidef"}
+spacy = {extras = ["cuda112"], version = "^3.4.1", source="pypidef"}
+torch = { version = "1.12.1", source="torchcu116"}
+torchaudio = { version = "0.12.1", source="torchcu116"}
+torchvision = { version = "0.13.1", source="torchcu116"}
+
+[[tool.poetry.source]]
+name = "pypidef"
+url = "https://pypi.org/simple"
+default = true
+secondary = false
+
+[[tool.poetry.source]]
+name = "torchcu116"
+url = "https://download.pytorch.org/whl/cu116"
+default = false
+secondary = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

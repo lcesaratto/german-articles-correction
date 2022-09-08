@@ -23,3 +23,8 @@ def get_device(show_info = True):
             print('No GPU available, using the CPU instead.')
 
     return device
+
+if __name__ == "__main__":
+    get_cuda_info()
+    get_torch_info()
+    device = get_device()

@@ -6,3 +6,9 @@ References:
 4. Grammar and spelling checker: https://textgears.com/grammatik-uberprufen-online
 5. German Wikipedia dump: https://dumps.wikimedia.org/dewiki/20220520/
 6. Preprocessed wikipedia corpus: https://github.com/GermanT5/wikipedia2corpus
+
+pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
+
+python -m spacy download de_dep_news_trf
+python -m spacy download de_core_news_md
+python -m spacy download de_core_news_lg
