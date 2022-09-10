@@ -3,7 +3,7 @@ from transformers import    AutoModelForSequenceClassification,\
                             get_scheduler
 
 
-class Model():
+class Model:
     def __init__(self, model_name, num_epochs, length_dataloader):
         self.model = AutoModelForSequenceClassification.from_pretrained(
             model_name,
