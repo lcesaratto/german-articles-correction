@@ -10,11 +10,11 @@ from german_grammar_checker.data_preparation import DataPreparator
 
 TEST_DATA_PATH = "data/eval.csv"
 MODEL_NAME = "bert-base-german-cased"
-PRETRAINED_MODEL_PATH = "pretrained_model/"
+PRETRAINED_MODEL_PATH = "pretrained_model/model_state_dict.pt"
 BATCH_SIZE = 16
 
 
-class BertForCheckingGrammar:
+class BertForGrammarCorrectionEvaluator:
     def __init__(self, model_name, batch_size, pretrained_model_path):
         self.model_name = model_name
         self.batch_size = batch_size
@@ -62,8 +62,7 @@ class BertForCheckingGrammar:
         except RuntimeError as e:
             print(e)
 
-        return testing_stats
+        print("\nTesting results: ", testing_stats)
 
-bert_for_checking_grammar = BertForCheckingGrammar(MODEL_NAME, BATCH_SIZE, PRETRAINED_MODEL_PATH)
-testing_stats = bert_for_checking_grammar.evaluate_on_test_data(TEST_DATA_PATH)
-print("\nTesting results: ", testing_stats)
+bert_for_checking_grammar = BertForGrammarCorrectionEvaluator(MODEL_NAME, BATCH_SIZE, PRETRAINED_MODEL_PATH)
+bert_for_checking_grammar.evaluate_on_test_data(TEST_DATA_PATH)

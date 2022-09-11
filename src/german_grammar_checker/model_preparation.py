@@ -1,19 +1,40 @@
-from transformers import    AutoModelForSequenceClassification,\
+from transformers import    BertModel,\
                             AdamW,\
                             get_scheduler
+import torch.nn as nn
+import torch
 
+class BertForGrammarCorrection(nn.Module):
+    def __init__(self, model_name):
+        super(BertForGrammarCorrection, self).__init__()
+        self.bert = BertModel.from_pretrained(model_name)
+        self.linear = nn.Linear(768, 768)
+    
+    def forward(self, ids, mask):
+        output = self.bert(input_ids=ids, attention_mask=mask)
+        print(output)
+        print(output[0].shape)
+        exit()
+        output = self.linear(output[0].view(-1,768))
+        return output
 
 class Model:
-    def __init__(self, model_name, num_epochs, length_dataloader):
-        self.model = AutoModelForSequenceClassification.from_pretrained(
-            model_name,
-            num_labels = 2, # The number of output labels--2 for binary classification.
-            output_attentions = False, # Whether the model returns attentions weights.
-            output_hidden_states = False, # Whether the model returns all hidden-states.
-        )
+    def __init__(self, model_name):
+        self.model_name = model_name
+    
+    def init_model_and_optimizer(self):
+        self.model = BertForGrammarCorrection(self.model_name)
         self.optimizer = AdamW(self.model.parameters(),lr = 2e-5)
-        self.num_epochs = num_epochs
-        self.num_training_steps = self.num_epochs * length_dataloader
+
+    def load_pretrained_model(self, pretrained_model_path):
+        self.model = BertForGrammarCorrection(self.model_name)
+        self.model.load_state_dict(torch.load(pretrained_model_path))
+
+    def save_model_state_dict(self, pretrained_model_path):
+        torch.save(self.model.state_dict(), pretrained_model_path)
+    
+    def init_scheduler(self, num_epochs, length_dataloader):
+        self.num_training_steps = num_epochs * length_dataloader
         self.lr_scheduler = get_scheduler(
                                     "linear",
                                     optimizer=self.optimizer,
