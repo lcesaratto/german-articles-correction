@@ -8,7 +8,7 @@ from german_grammar_checker.helper_functions import get_device
 from german_grammar_checker.data_preparation import DataPreparator
 
 
-TEST_DATA_PATH = "data/eval.csv"
+TEST_DATA_PATH = "data/data_short.csv"
 MODEL_NAME = "bert-base-german-cased"
 PRETRAINED_MODEL_PATH = "pretrained_model/model_state_dict.pt"
 BATCH_SIZE = 16
@@ -64,5 +64,5 @@ class BertForGrammarCorrectionEvaluator:
 
         print("\nTesting results: ", testing_stats)
 
-bert_for_checking_grammar = BertForGrammarCorrectionEvaluator(MODEL_NAME, BATCH_SIZE, PRETRAINED_MODEL_PATH)
-bert_for_checking_grammar.evaluate_on_test_data(TEST_DATA_PATH)
+bert_for_grammar_correction_evaluator= BertForGrammarCorrectionEvaluator(MODEL_NAME, BATCH_SIZE, PRETRAINED_MODEL_PATH)
+bert_for_grammar_correction_evaluator.evaluate_on_test_data(TEST_DATA_PATH)
