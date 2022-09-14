@@ -1,9 +1,9 @@
 from german_grammar_checker.data_preparation import DataPreparator
 from german_grammar_checker.helper_functions import get_device
 from german_grammar_checker.model_preparation import Model
-import torch
 import warnings
 from tqdm import tqdm
+
 warnings.filterwarnings("ignore")
 
 
@@ -44,10 +44,12 @@ class BertForGrammarCorrectionTrainer:
                     "input_ids": batch[0].to(self.device),
                     "attention_mask":  batch[1].to(self.device),
                 }
-                output = self.model_class.model(**parameters)
+                output = self.model_class.model(
+                    **parameters)
 
                 loss = self.model_class.criterion(
-                    output, batch[2].to(self.device).to(torch.float32))
+                    output.transpose(1, 2),
+                    batch[2].to(self.device))
                 total_train_loss += loss.item()
                 loss.backward()
 

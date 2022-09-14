@@ -10,15 +10,12 @@ class BertForGrammarCorrection(nn.Module):
         super(BertForGrammarCorrection, self).__init__()
         self.bert = BertModel.from_pretrained(model_name)
         self.linear = nn.Linear(768, 256)
-        self.linear2 = nn.Linear(256, 1)
+        self.linear2 = nn.Linear(256, 13)
 
     def forward(self, input_ids, attention_mask):
         output = self.bert(input_ids=input_ids, attention_mask=attention_mask)
-        # print(output.last_hidden_state.shape)
         output = self.linear(output.last_hidden_state)
         output = self.linear2(output)
-        # print(output.view(-1, 128).shape)
-        output = output.view(-1, 128)
         return output
 
 
@@ -30,7 +27,7 @@ class Model:
         self.model = BertForGrammarCorrection(self.model_name)
         self.optimizer = AdamW(
             filter(lambda p: p.requires_grad, self.model.parameters()), lr=2e-5)
-        self.criterion = nn.MSELoss()
+        self.criterion = nn.CrossEntropyLoss()
 
     def load_pretrained_model(self, pretrained_model_path):
         self.model = BertForGrammarCorrection(self.model_name)
