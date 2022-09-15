@@ -38,7 +38,7 @@ class DataPreparator:
                             12: self.tokenizer.convert_tokens_to_ids("Des"), }
 
     def _load_dataset(self, data_path) -> pd.DataFrame:
-        return pd.read_csv(data_path, nrows=10000)
+        return pd.read_csv(data_path, nrows=None)
 
     def _prepare_data(self, df: pd.DataFrame) -> pd.DataFrame:
         df = df[["masked_sentence", "wrong_sentence", "masked_token"]]
