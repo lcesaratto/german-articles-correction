@@ -23,6 +23,19 @@ class DataPreparator:
                               "Den": 10,
                               "Dem": 11,
                               "Des": 12, }
+        self.classes_ids = {0: 0,
+                            1: self.tokenizer.convert_tokens_to_ids("die"),
+                            2: self.tokenizer.convert_tokens_to_ids("der"),
+                            3: self.tokenizer.convert_tokens_to_ids("das"),
+                            4: self.tokenizer.convert_tokens_to_ids("den"),
+                            5: self.tokenizer.convert_tokens_to_ids("dem"),
+                            6: self.tokenizer.convert_tokens_to_ids("des"),
+                            7: self.tokenizer.convert_tokens_to_ids("Die"),
+                            8: self.tokenizer.convert_tokens_to_ids("Der"),
+                            9: self.tokenizer.convert_tokens_to_ids("Das"),
+                            10: self.tokenizer.convert_tokens_to_ids("Den"),
+                            11: self.tokenizer.convert_tokens_to_ids("Dem"),
+                            12: self.tokenizer.convert_tokens_to_ids("Des"), }
 
     def _load_dataset(self, data_path) -> pd.DataFrame:
         return pd.read_csv(data_path, nrows=10000)
@@ -39,7 +52,7 @@ class DataPreparator:
 
         input_ids = []
         attention_masks = []
-        print("Tokenizing training data...")
+        print("\nTokenizing training data...")
         for sent in tqdm(wrong_sentences):
             encoded_dict = self.tokenizer(
                 sent,
@@ -56,7 +69,7 @@ class DataPreparator:
         attention_masks = torch.cat(attention_masks, dim=0)
 
         labels = []
-        print("Tokenizing labels...")
+        print("\nTokenizing labels...")
         for sent in tqdm(masked_sentences):
             encoded_dict = self.tokenizer(
                 sent,
@@ -89,4 +102,23 @@ class DataPreparator:
         dataloader = self._create_dataloader(
             input_ids, attention_masks, labels)
 
+        return dataloader
+
+    def get_sentence_dataloader(self, sentence):
+        encoded_dict = self.tokenizer(
+            sentence,
+            truncation=True,
+            max_length=128,
+            padding='max_length',
+            return_attention_mask=True,
+            return_tensors='pt',
+        )
+        input_ids = [encoded_dict['input_ids']]
+        attention_masks = [encoded_dict['attention_mask']]
+        input_ids = torch.cat(input_ids, dim=0)
+        attention_masks = torch.cat(attention_masks, dim=0)
+
+        dataset = TensorDataset(input_ids, attention_masks)
+        dataloader = DataLoader(dataset, shuffle=False,
+                                batch_size=self.batch_size)
         return dataloader

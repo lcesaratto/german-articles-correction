@@ -23,14 +23,17 @@ class Model:
     def __init__(self, model_name):
         self.model_name = model_name
 
-    def init_model_and_optimizer_and_criterion(self):
+    def init_model(self):
         self.model = BertForGrammarCorrection(self.model_name)
+
+    def init_optimizer(self):
         self.optimizer = AdamW(
             filter(lambda p: p.requires_grad, self.model.parameters()), lr=2e-5)
+
+    def init_criterion(self):
         self.criterion = nn.CrossEntropyLoss()
 
-    def load_pretrained_model(self, pretrained_model_path):
-        self.model = BertForGrammarCorrection(self.model_name)
+    def load_model_state_dict(self, pretrained_model_path):
         self.model.load_state_dict(torch.load(pretrained_model_path))
 
     def save_model_state_dict(self, pretrained_model_path):
@@ -44,9 +47,3 @@ class Model:
             num_warmup_steps=0,
             num_training_steps=self.num_training_steps
         )
-
-    def get_model_optimizer_scheduler(self):
-        return self.model, self.optimizer, self.lr_scheduler
-
-    def get_num_training_steps(self):
-        return self.num_training_steps

@@ -90,8 +90,6 @@ class BertForMaskedLanguageModeling:
             with torch.no_grad():
                 outputs = self.model(**parameters)
             logits = outputs.logits
-            print(logits.shape)
-            exit()
 
             for i in range(logits.shape[0]):
                 mask_token_index = (parameters["input_ids"] == self.tokenizer.mask_token_id)[
