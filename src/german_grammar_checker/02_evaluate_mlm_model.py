@@ -4,8 +4,6 @@ import torch
 import pandas as pd
 from torch.utils.data import TensorDataset, DataLoader
 
-from german_grammar_checker.helper_functions import get_device
-
 
 TEST_DATA_PATH = "data/raw_data_short.csv"
 MODEL_NAME = "bert-base-german-cased"
@@ -17,8 +15,25 @@ class BertForMaskedLanguageModeling:
         self.tokenizer = BertTokenizer.from_pretrained(model_name)
         self.model = BertForMaskedLM.from_pretrained(model_name)
         self.batch_size = batch_size
-        self.device = get_device()
+        self.device = self._get_device()
         self.model = self.model.to(self.device)
+
+    def _get_device(self, show_info=True):
+        if torch.cuda.is_available():
+            device = torch.device("cuda")
+
+            if show_info:
+                print('There are %d GPU(s) available.' %
+                      torch.cuda.device_count())
+                print('We will use the GPU:', torch.cuda.get_device_name(0))
+
+        else:
+            device = torch.device("cpu")
+
+            if show_info:
+                print('No GPU available, using the CPU instead.')
+
+        return device
 
     def _load_dataset(self, data_path) -> pd.DataFrame:
         return pd.read_csv(data_path, nrows=10)

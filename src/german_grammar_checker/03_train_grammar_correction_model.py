@@ -1,6 +1,6 @@
-from german_grammar_checker.data_preparation import DataPreparator
-from german_grammar_checker.helper_functions import get_device
-from german_grammar_checker.model_preparation import Model
+from german_grammar_checker.grammar_correction.data_preparation import DataPreparator
+from german_grammar_checker.grammar_correction.helper_functions import get_device
+from german_grammar_checker.grammar_correction.model_preparation import Model
 import warnings
 import pandas as pd
 
@@ -78,7 +78,7 @@ bert_for_grammar_correction_trainer = BertForGrammarCorrectionTrainer(
 training_stats = bert_for_grammar_correction_trainer.train_model_on_full_train_data(
     BATCH_SIZE, NUM_EPOCHS, TRAIN_DATA_PATH)
 training_stats = pd.DataFrame(training_stats)
-training_stats.to_csv("training_stats.csv", index=False)
+training_stats.to_csv("pretrained_model/training_stats.csv", index=False)
 
 bert_for_grammar_correction_trainer.save_model_state_dict(
     PRETRAINED_MODEL_PATH)
