@@ -7,13 +7,6 @@ import pandas as pd
 warnings.filterwarnings("ignore")
 
 
-TRAIN_DATA_PATH = "data/data_short.csv"
-MODEL_NAME = "bert-base-german-cased"
-BATCH_SIZE = 16
-NUM_EPOCHS = 1
-PRETRAINED_MODEL_PATH = "pretrained_model/model_state_dict.pt"
-
-
 class BertForGrammarCorrectionTrainer:
     def __init__(self, model_name):
         self.model_name = model_name
@@ -25,9 +18,10 @@ class BertForGrammarCorrectionTrainer:
         self.device = get_device()
         self.model_class.model.to(self.device)
 
-    def train_model_on_full_train_data(self, batch_size, num_epochs, train_data_path):
+    def train_model_on_full_train_data(self, batch_size, num_epochs, train_data_path, one_mask=True):
         data_preparator = DataPreparator(self.model_name, batch_size)
-        train_dataloader = data_preparator.get_dataloaders(train_data_path)
+        train_dataloader = data_preparator.get_dataloaders(
+            train_data_path, one_mask)
 
         self.model_class.init_scheduler(num_epochs, len(train_dataloader))
 
@@ -72,13 +66,41 @@ class BertForGrammarCorrectionTrainer:
         self.model_class.save_model_state_dict(pretrained_model_path)
 
 
+# # ONE MASK PER SENTENCE
+# TRAIN_DATA_PATH = "data/data_short_one_mask_per_sentence.csv"
+# MODEL_NAME = "bert-base-german-cased"
+# BATCH_SIZE = 16
+# NUM_EPOCHS = 1
+# PRETRAINED_MODEL_PATH = "pretrained_model/model_state_dict_single_mask.pt"
+
+# bert_for_grammar_correction_trainer = BertForGrammarCorrectionTrainer(
+#     MODEL_NAME)
+
+# training_stats = bert_for_grammar_correction_trainer.train_model_on_full_train_data(
+#     BATCH_SIZE, NUM_EPOCHS, TRAIN_DATA_PATH)
+# training_stats = pd.DataFrame(training_stats)
+# training_stats.to_csv("pretrained_model/training_stats_single_mask.csv", index=False)
+
+# bert_for_grammar_correction_trainer.save_model_state_dict(
+#     PRETRAINED_MODEL_PATH)
+
+
+# MULTIPLE MASKS PER SENTENCE
+TRAIN_DATA_PATH = "data/data_short_multiple_masks_per_sentence.csv"
+MODEL_NAME = "bert-base-german-cased"
+BATCH_SIZE = 16
+NUM_EPOCHS = 1
+PRETRAINED_MODEL_PATH = "pretrained_model/model_state_dict_multiple_masks.pt"
+ONE_MASK = False
+
 bert_for_grammar_correction_trainer = BertForGrammarCorrectionTrainer(
     MODEL_NAME)
 
 training_stats = bert_for_grammar_correction_trainer.train_model_on_full_train_data(
-    BATCH_SIZE, NUM_EPOCHS, TRAIN_DATA_PATH)
+    BATCH_SIZE, NUM_EPOCHS, TRAIN_DATA_PATH, ONE_MASK)
 training_stats = pd.DataFrame(training_stats)
-training_stats.to_csv("pretrained_model/training_stats.csv", index=False)
+training_stats.to_csv(
+    "pretrained_model/training_stats_multiple_masks.csv", index=False)
 
 bert_for_grammar_correction_trainer.save_model_state_dict(
     PRETRAINED_MODEL_PATH)

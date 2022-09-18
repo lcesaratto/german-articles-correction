@@ -41,32 +41,42 @@ class DataPreparator:
         return pd.read_csv(data_path, nrows=None)
 
     def _prepare_data(self, df: pd.DataFrame) -> pd.DataFrame:
+        df.dropna(subset=["masked_sentence", "wrong_sentence",
+                  "masked_token"], inplace=True)
         df = df[["masked_sentence", "wrong_sentence", "masked_token"]]
         return df
 
-    def _create_tensors(self, df: pd.DataFrame):
+    def _create_input_tensors(self, df: pd.DataFrame):
         wrong_sentences = df["wrong_sentence"].values
-        masked_sentences = df["masked_sentence"].values
-        masked_tokens = df["masked_token"].replace(
-            self.token_classes).to_list()
 
         input_ids = []
         attention_masks = []
         print("\nTokenizing training data...")
         for sent in tqdm(wrong_sentences):
-            encoded_dict = self.tokenizer(
-                sent,
-                truncation=True,
-                max_length=128,
-                padding='max_length',
-                return_attention_mask=True,
-                return_tensors='pt',
-            )
-            input_ids.append(encoded_dict['input_ids'])
-            attention_masks.append(encoded_dict['attention_mask'])
+            try:
+                encoded_dict = self.tokenizer(
+                    sent,
+                    truncation=True,
+                    max_length=128,
+                    padding='max_length',
+                    return_attention_mask=True,
+                    return_tensors='pt',
+                )
+                input_ids.append(encoded_dict['input_ids'])
+                attention_masks.append(encoded_dict['attention_mask'])
+            except:
+                print(sent)
+                exit()
 
         input_ids = torch.cat(input_ids, dim=0)
         attention_masks = torch.cat(attention_masks, dim=0)
+
+        return input_ids, attention_masks
+
+    def _create_output_tensor_one_mask(self, df: pd.DataFrame):
+        masked_sentences = df["masked_sentence"].values
+        masked_tokens = df["masked_token"].replace(
+            self.token_classes).to_list()
 
         labels = []
         print("\nTokenizing labels...")
@@ -86,7 +96,35 @@ class DataPreparator:
         labels = (labels / 5) * torch.tensor(masked_tokens).view(-1, 1)
         labels = labels.type(torch.LongTensor)
 
-        return input_ids, attention_masks, labels
+        return labels
+
+    def _create_output_tensor_multiple_masks(self, df: pd.DataFrame):
+        masked_sentences = df["masked_sentence"].values
+        masked_tokens = df["masked_token"].apply(eval)
+
+        labels = []
+        print("\nTokenizing labels...")
+        for sent, masked_tokens in tqdm(zip(masked_sentences, masked_tokens)):
+            encoded_dict = self.tokenizer(
+                sent,
+                truncation=True,
+                max_length=128,
+                padding='max_length',
+                return_attention_mask=False,
+                return_tensors='pt',
+            )
+            sentence_labels = encoded_dict['input_ids']
+            sentence_labels = sentence_labels * (sentence_labels == 5)
+            for masked_token, idx in zip(masked_tokens, sentence_labels.nonzero()):
+                sentence_labels[idx[0], idx[1]
+                                ] = self.token_classes[masked_token]
+            labels.append(sentence_labels)
+
+        labels = torch.cat(labels, dim=0)
+        labels = labels.type(torch.LongTensor)
+        # labels[labels == 0] = -100
+
+        return labels
 
     def _create_dataloader(self, input_ids, attention_masks, labels):
         dataset = TensorDataset(input_ids, attention_masks, labels)
@@ -95,10 +133,14 @@ class DataPreparator:
 
         return dataloader
 
-    def get_dataloaders(self, data_path):
+    def get_dataloaders(self, data_path, one_mask):
         df = self._load_dataset(data_path)
         df = self._prepare_data(df)
-        input_ids, attention_masks, labels = self._create_tensors(df)
+        input_ids, attention_masks = self._create_input_tensors(df)
+        if one_mask:
+            labels = self._create_output_tensor_one_mask(df)
+        else:
+            labels = self._create_output_tensor_multiple_masks(df)
         dataloader = self._create_dataloader(
             input_ids, attention_masks, labels)
 

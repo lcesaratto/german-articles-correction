@@ -254,16 +254,7 @@ class DataGenerator:
         if run:
             df = pd.read_csv(
                 "data/raw_data_short_multiple_masks_per_sentence.csv", nrows=None)
-
-            df["masked_token"] = df["masked_token"].apply(eval)
-            df["pos_tag"] = df["pos_tag"].apply(eval)
-            df["dependency_tag"] = df["dependency_tag"].apply(eval)
-            df["morph_case"] = df["morph_case"].apply(eval)
-            df["morph_definite"] = df["morph_definite"].apply(eval)
-            df["morph_gender"] = df["morph_gender"].apply(eval)
-            df["morph_number"] = df["morph_number"].apply(eval)
-            df["morph_pron_type"] = df["morph_pron_type"].apply(eval)
-            df["morph_poss"] = df["morph_poss"].apply(eval)
+            df = df.dropna(subset=["masked_sentence"])
 
             possible_tokens = {"die": ["der", "das", "den", "dem", "des"],
                                "der": ["die", "das", "den", "dem", "des"],
@@ -279,37 +270,84 @@ class DataGenerator:
                                "Des": ["Die", "Der", "Das", "Den", "Dem"], }
 
             df["wrong_sentence"] = ["" for _ in range(len(df))]
-            df = df.dropna(subset=["masked_sentence"])
+
+            df["masked_token"] = df["masked_token"].apply(eval)
+            df["pos_tag"] = df["pos_tag"].apply(eval)
+            df["dependency_tag"] = df["dependency_tag"].apply(eval)
+            df["morph_case"] = df["morph_case"].apply(eval)
+            df["morph_definite"] = df["morph_definite"].apply(eval)
+            df["morph_gender"] = df["morph_gender"].apply(eval)
+            df["morph_number"] = df["morph_number"].apply(eval)
+            df["morph_pron_type"] = df["morph_pron_type"].apply(eval)
+            df["morph_poss"] = df["morph_poss"].apply(eval)
 
             for idx in tqdm(range(df.shape[0])):
 
-                masked_token_list = []
                 masked_sentence = df.iloc[idx]["masked_sentence"]
                 wrong_sentence = df.iloc[idx]["masked_sentence"]
+                masked_token_list = []
+                pos_tag_list = []
+                dependency_tag_list = []
+                morph_case_list = []
+                morph_definite_list = []
+                morph_gender_list = []
+                morph_number_list = []
+                morph_pron_type_list = []
+                morph_poss_list = []
 
-                for (morph_definite, pos_tag, masked_token) in zip(df.iloc[idx]["morph_definite"], df.iloc[idx]["pos_tag"], df.iloc[idx]["masked_token"]):
+                for token_idx, masked_token in enumerate(df.iloc[idx]["masked_token"]):
+
+                    pos_tag = df.iloc[idx]["pos_tag"][token_idx]
+                    dependency_tag = df.iloc[idx]["dependency_tag"][token_idx]
+                    morph_case = df.iloc[idx]["morph_case"][token_idx]
+                    morph_definite = df.iloc[idx]["morph_definite"][token_idx]
+                    morph_gender = df.iloc[idx]["morph_gender"][token_idx]
+                    morph_number = df.iloc[idx]["morph_number"][token_idx]
+                    morph_pron_type = df.iloc[idx]["morph_pron_type"][token_idx]
+                    morph_poss = df.iloc[idx]["morph_poss"][token_idx]
+
                     if (morph_definite == "Def") and (pos_tag == "ART") and (masked_token in possible_tokens.keys()):
-                        wrong_sentence = wrong_sentence.replace(
-                            "[MASK]", random.choice(possible_tokens[masked_token]), 1)
+
                         masked_sentence = masked_sentence.replace(
                             "[MASK]", "[NOMASK]", 1)
-                        masked_token_list.append(masked_token)
-                    else:
                         wrong_sentence = wrong_sentence.replace(
-                            "[MASK]", masked_token, 1)
+                            "[MASK]", random.choice(possible_tokens[masked_token]), 1)
+
+                        masked_token_list.append(masked_token)
+                        pos_tag_list.append(pos_tag)
+                        dependency_tag_list.append(dependency_tag)
+                        morph_case_list.append(morph_case)
+                        morph_definite_list.append(morph_definite)
+                        morph_gender_list.append(morph_gender)
+                        morph_number_list.append(morph_number)
+                        morph_pron_type_list.append(morph_pron_type)
+                        morph_poss_list.append(morph_poss)
+
+                    else:
+
                         masked_sentence = masked_sentence.replace(
+                            "[MASK]", masked_token, 1)
+                        wrong_sentence = wrong_sentence.replace(
                             "[MASK]", masked_token, 1)
 
                 masked_sentence = masked_sentence.replace(
                     "[NOMASK]", "[MASK]")
-
-                df["masked_token"][idx] = masked_token_list
                 df["masked_sentence"][idx] = masked_sentence
                 df["wrong_sentence"][idx] = wrong_sentence
 
-            df = df[df["masked_sentence"].str.contains("[MASK]", regex=False)]
-            print(df.shape[0])
+                df["masked_token"][idx] = masked_token_list
+                df["pos_tag"][idx] = pos_tag_list
+                df["dependency_tag"][idx] = dependency_tag_list
+                df["morph_case"][idx] = morph_case_list
+                df["morph_definite"][idx] = morph_definite_list
+                df["morph_gender"][idx] = morph_gender_list
+                df["morph_number"][idx] = morph_number_list
+                df["morph_pron_type"][idx] = morph_pron_type_list
+                df["morph_poss"][idx] = morph_poss_list
 
+            df = df[df["masked_sentence"].str.contains("[MASK]", regex=False)]
+            df.dropna(subset=["wrong_sentence"], inplace=True)
+            print(df.shape[0])
             df.to_csv(
                 "data/data_short_multiple_masks_per_sentence.csv", index=False)
 
@@ -325,5 +363,5 @@ DataGenerator.generate_training_data_multiple_masks_per_sentence(False)
 DataGenerator.add_wrong_sentences_to_training_data_one_mask_per_sentence(False)
 
 DataGenerator.add_wrong_sentences_to_training_data_multiple_masks_per_sentence(
-    True)
-# 100%|████████████████████████████████████████████████████████| 99650/99650 [04:54<00:00, 338.79it/s]
+    False)
+# 100%|████████████████████████████████████████████████████████| 99650/99650 [06:23<00:00, 260.18it/s]

@@ -5,11 +5,6 @@ import pandas as pd
 from torch.utils.data import TensorDataset, DataLoader
 
 
-TEST_DATA_PATH = "data/raw_data_short.csv"
-MODEL_NAME = "bert-base-german-cased"
-BATCH_SIZE = 16
-
-
 class BertForMaskedLanguageModeling:
     def __init__(self, model_name, batch_size):
         self.tokenizer = BertTokenizer.from_pretrained(model_name)
@@ -117,6 +112,10 @@ class BertForMaskedLanguageModeling:
                 print("EXPECTED: ", self.tokenizer.decode(
                     batch[2][i].to(self.device)))
 
+
+TEST_DATA_PATH = "data/raw_data_short_one_mask_per_sentence.csv"
+MODEL_NAME = "bert-base-german-cased"
+BATCH_SIZE = 16
 
 bert_for_masked_lm = BertForMaskedLanguageModeling(MODEL_NAME, BATCH_SIZE)
 bert_for_masked_lm.predict(TEST_DATA_PATH)
