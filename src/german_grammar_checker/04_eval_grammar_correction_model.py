@@ -7,12 +7,6 @@ import warnings
 warnings.filterwarnings("ignore")
 
 
-TEST_DATA_PATH = "data/data_short.csv"
-MODEL_NAME = "bert-base-german-cased"
-PRETRAINED_MODEL_PATH = "pretrained_model/model_state_dict_multiple_masks.pt"
-BATCH_SIZE = 16
-
-
 class BertForGrammarCorrectionEvaluator:
     def __init__(self, model_name, pretrained_model_path):
         self.model_name = model_name
@@ -80,6 +74,11 @@ class BertForGrammarCorrectionEvaluator:
 
         return sentence
 
+
+TEST_DATA_PATH = "data/data_short.csv"
+MODEL_NAME = "bert-base-german-cased"
+PRETRAINED_MODEL_PATH = "pretrained_model/model_state_dict_multiple_masks_partially_wrong.pt"
+BATCH_SIZE = 16
 
 bert_for_grammar_correction_evaluator = BertForGrammarCorrectionEvaluator(
     MODEL_NAME, PRETRAINED_MODEL_PATH)

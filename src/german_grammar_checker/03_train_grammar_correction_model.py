@@ -46,8 +46,6 @@ class BertForGrammarCorrectionTrainer:
                     batch[2].to(self.device))
                 loss.backward()
 
-                # torch.nn.utils.clip_grad_norm_(
-                #     self.model_class.model.parameters(), 1.0)
                 self.model_class.optimizer.step()
                 self.model_class.lr_scheduler.step()
                 self.model_class.optimizer.zero_grad()
@@ -85,12 +83,33 @@ class BertForGrammarCorrectionTrainer:
 #     PRETRAINED_MODEL_PATH)
 
 
-# MULTIPLE MASKS PER SENTENCE
-TRAIN_DATA_PATH = "data/data_short_multiple_masks_per_sentence.csv"
+# # MULTIPLE MASKS PER SENTENCE
+# TRAIN_DATA_PATH = "data/data_short_multiple_masks_per_sentence.csv"
+# MODEL_NAME = "bert-base-german-cased"
+# BATCH_SIZE = 16
+# NUM_EPOCHS = 1
+# PRETRAINED_MODEL_PATH = "pretrained_model/model_state_dict_multiple_masks.pt"
+# ONE_MASK = False
+
+# bert_for_grammar_correction_trainer = BertForGrammarCorrectionTrainer(
+#     MODEL_NAME)
+
+# training_stats = bert_for_grammar_correction_trainer.train_model_on_full_train_data(
+#     BATCH_SIZE, NUM_EPOCHS, TRAIN_DATA_PATH, ONE_MASK)
+# training_stats = pd.DataFrame(training_stats)
+# training_stats.to_csv(
+#     "pretrained_model/training_stats_multiple_masks.csv", index=False)
+
+# bert_for_grammar_correction_trainer.save_model_state_dict(
+#     PRETRAINED_MODEL_PATH)
+
+
+# MULTIPLE MASKS PER PARTIALLY WRONG SENTENCE
+TRAIN_DATA_PATH = "data/data_short_multiple_masks_per_sentence_partially_wrong.csv"
 MODEL_NAME = "bert-base-german-cased"
 BATCH_SIZE = 16
 NUM_EPOCHS = 1
-PRETRAINED_MODEL_PATH = "pretrained_model/model_state_dict_multiple_masks.pt"
+PRETRAINED_MODEL_PATH = "pretrained_model/model_state_dict_multiple_masks_partially_wrong.pt"
 ONE_MASK = False
 
 bert_for_grammar_correction_trainer = BertForGrammarCorrectionTrainer(
@@ -100,7 +119,7 @@ training_stats = bert_for_grammar_correction_trainer.train_model_on_full_train_d
     BATCH_SIZE, NUM_EPOCHS, TRAIN_DATA_PATH, ONE_MASK)
 training_stats = pd.DataFrame(training_stats)
 training_stats.to_csv(
-    "pretrained_model/training_stats_multiple_masks.csv", index=False)
+    "pretrained_model/training_stats_multiple_masks_partially_wrong.csv", index=False)
 
 bert_for_grammar_correction_trainer.save_model_state_dict(
     PRETRAINED_MODEL_PATH)

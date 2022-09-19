@@ -122,7 +122,6 @@ class DataPreparator:
 
         labels = torch.cat(labels, dim=0)
         labels = labels.type(torch.LongTensor)
-        # labels[labels == 0] = -100
 
         return labels
 
