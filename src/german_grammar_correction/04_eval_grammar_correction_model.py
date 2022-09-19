@@ -1,6 +1,6 @@
-from german_grammar_checker.grammar_correction.data_preparation import DataPreparator
-from german_grammar_checker.grammar_correction.helper_functions import get_device
-from german_grammar_checker.grammar_correction.model_preparation import Model
+from german_grammar_correction.grammar_correction.data_preparation import DataPreparator
+from german_grammar_correction.grammar_correction.helper_functions import get_device
+from german_grammar_correction.grammar_correction.model_preparation import Model
 import pandas as pd
 import torch
 import warnings

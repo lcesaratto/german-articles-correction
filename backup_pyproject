@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "german-grammar-checker"
+name = "german_grammar_correction"
 version = "0.1.0"
 description = ""
 authors = ["Lisandro Cesaratto <lisandrocesaratto95@gmail.com>"]
 readme = "README.md"
-packages = [{include = "german_grammar_checker", from = "src"}]
+packages = [{include = "german_grammar_correction", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
