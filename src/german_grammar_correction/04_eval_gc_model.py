@@ -77,7 +77,9 @@ class BertForGrammarCorrectionEvaluator:
 
 TEST_DATA_PATH = "data/data_short.csv"
 MODEL_NAME = "bert-base-german-cased"
-PRETRAINED_MODEL_PATH = "pretrained_model/model_state_dict_multiple_masks_partially_wrong.pt"
+# PRETRAINED_MODEL_PATH = "pretrained_model/model_state_dict_single_mask.pt"
+PRETRAINED_MODEL_PATH = "pretrained_model/model_state_dict_multiple_masks.pt"
+# PRETRAINED_MODEL_PATH = "pretrained_model/model_state_dict_multiple_masks_partially_wrong.pt"
 BATCH_SIZE = 16
 
 bert_for_grammar_correction_evaluator = BertForGrammarCorrectionEvaluator(

@@ -8,8 +8,8 @@ from torch.utils.data import TensorDataset, DataLoader
 class DataPreparator:
     def __init__(self, model_name, batch_size):
         self.tokenizer = BertTokenizer.from_pretrained(model_name)
-        # print(self.tokenizer.all_special_tokens)
-        # print(self.tokenizer.all_special_ids)
+        print(self.tokenizer.all_special_tokens)
+        print(self.tokenizer.all_special_ids)
         self.batch_size = batch_size
         self.token_classes = {"die": 1,
                               "der": 2,
