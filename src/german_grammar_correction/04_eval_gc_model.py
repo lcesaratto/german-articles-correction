@@ -78,8 +78,8 @@ class BertForGrammarCorrectionEvaluator:
 TEST_DATA_PATH = "data/data_short.csv"
 MODEL_NAME = "bert-base-german-cased"
 # PRETRAINED_MODEL_PATH = "pretrained_model/model_state_dict_single_mask.pt"
-PRETRAINED_MODEL_PATH = "pretrained_model/model_state_dict_multiple_masks.pt"
-# PRETRAINED_MODEL_PATH = "pretrained_model/model_state_dict_multiple_masks_partially_wrong.pt"
+# PRETRAINED_MODEL_PATH = "pretrained_model/model_state_dict_multiple_masks.pt"
+PRETRAINED_MODEL_PATH = "pretrained_model/model_state_dict_multiple_masks_partially_wrong.pt"
 BATCH_SIZE = 16
 
 bert_for_grammar_correction_evaluator = BertForGrammarCorrectionEvaluator(
@@ -98,8 +98,8 @@ print("\nTRUE SENTENCE:\t\t", sentence)
 print("\nWRONG SENTENCE:\t\t", wrong_sentence)
 print("\nPREDICTED SENTENCE:\t", prediction, "\n")
 
-sentence = "Dem Hund des Mannes geht es nicht gut. Der Hund des Mannes ist krank. Der Hund hat wahrscheinlich die Shokolade, die auf dem Boden lag, gegessen."
-wrong_sentence = "Der Hund den Mannes geht es nicht gut. Den Hund des Mannes ist krank. Den Hund hat wahrscheinlich der Shokolade, die auf den Boden lag, gegessen."
+sentence = "Dem Hund des Mannes geht es nicht gut. Der Hund des Mannes ist krank. Der Hund hat wahrscheinlich die Schokolade, die auf dem Boden lag, gegessen."
+wrong_sentence = "Der Hund den Mannes geht es nicht gut. Den Hund des Mannes ist krank. Den Hund hat wahrscheinlich der Schokolade, die auf den Boden lag, gegessen."
 prediction = bert_for_grammar_correction_evaluator.evaluate_on_sentences(
     wrong_sentence)
 
