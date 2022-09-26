@@ -93,8 +93,8 @@ print("\nTRUE SENTENCE:\t\t", sentence)
 print("\nWRONG SENTENCE:\t\t", wrong_sentence)
 print("\nPREDICTED SENTENCE:\t", prediction, "\n")
 
-sentence = "Das Kind eines Mannes hat seiner Hausaufgaben in dem Bus vergessen. Der Busfahrer hat sie einer Lehrerin gegeben."
-wrong_sentence = "Das Kind ein Mannes hat seiner Hausaufgaben in den Bus vergessen. Den Busfahrer hat sie eine Lehrerin gegeben."
+sentence = "Das Kind eines Mannes hat eine Mütze in dem Bus vergessen. Der Busfahrer hat sie einer Lehrerin gegeben."
+wrong_sentence = "Das Kind ein Mannes hat einer Mütze in den Bus vergessen. Den Busfahrer hat sie eine Lehrerin gegeben."
 prediction = bert_for_grammar_correction_evaluator.evaluate_on_sentences(
     wrong_sentence)
 
